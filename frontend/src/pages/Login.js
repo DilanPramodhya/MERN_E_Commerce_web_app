@@ -22,8 +22,8 @@ const Login = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-  }
-  console.log("Data login", data)
+  };
+  console.log("Data login", data);
 
   return (
     <section id="login">
@@ -42,6 +42,7 @@ const Login = () => {
                   name="email"
                   value={data.email}
                   onChange={handleOnChange}
+                  required
                   className="w-full h-full outline-none bg-transparent"
                 />
               </div>
@@ -55,6 +56,7 @@ const Login = () => {
                   name="password"
                   value={data.password}
                   onChange={handleOnChange}
+                  required
                   className="w-full h-full outline-none bg-transparent"
                 />
                 <div

@@ -2,23 +2,79 @@ import React, { useState } from "react";
 import loginIcon from "../assest/login3.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import imageToBase64 from "../helpers/imageToBase64";
 
 const SignUp = () => {
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+    name: "",
+    confirmPassword: "",
+    profilePic: "",
+  });
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    setData((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+
+  const handleUploadPic = async (e) => {
+    const file = e.target.files[0];
+
+    const imagePic = await imageToBase64(file);
+    setData((prev) => {
+      return {
+        ...prev,
+        profilePic: imagePic,
+      };
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+  console.log("Data login", data);
   return (
-    <section id="sign-up">
+    <section id="signup">
       <div className="mx-auto container p-8">
         <div className="bg-white p-5 w-full max-w-sm mx-auto rounded">
-          <div className="w-20 h-20 mx-auto">
-            <img src={loginIcon} alt="login icon" />
+          <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
+            <div>
+              <img src={data.profilePic || loginIcon} alt="login icon" />
+            </div>
+            <form>
+              <label>
+                <div className="text-xs bg-opacity-80 bg-slate-400 pb-4 pt-2 py-4 cursor-pointer text-center absolute bottom-0 w-full">
+                  Upload Photo
+                </div>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleUploadPic}
+                  required
+                />
+              </label>
+            </form>
           </div>
-          <form className="pt-6">
+
+          <form className="pt-6" onSubmit={handleSubmit}>
             <div className="grid">
               <label htmlFor="">Name : </label>
               <div className="bg-slate-300 p-1">
                 <input
                   type="text"
                   placeholder="Enter Your Name"
+                  name="name"
+                  value={data.name}
+                  onChange={handleOnChange}
+                  required
                   className="w-full h-full outline-none bg-transparent"
                 />
               </div>
@@ -29,6 +85,10 @@ const SignUp = () => {
                 <input
                   type="email"
                   placeholder="Enter Your Email"
+                  name="email"
+                  value={data.email}
+                  onChange={handleOnChange}
+                  required
                   className="w-full h-full outline-none bg-transparent"
                 />
               </div>
@@ -39,6 +99,10 @@ const SignUp = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter Password"
+                  name="password"
+                  value={data.password}
+                  onChange={handleOnChange}
+                  required
                   className="w-full h-full outline-none bg-transparent"
                 />
                 <div
@@ -51,15 +115,21 @@ const SignUp = () => {
               <label className="grid mt-2">Confirm Password : </label>
               <div className="bg-slate-300 p-1 flex">
                 <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter Password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Enter Confirm Password"
+                  name="confirmPassword"
+                  value={data.confirmPassword}
+                  onChange={handleOnChange}
+                  required
                   className="w-full h-full outline-none bg-transparent"
                 />
                 <div
                   className="cursor-pointer text-xl"
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
                 >
-                  <span>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
+                  <span>
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
                 </div>
               </div>
             </div>
@@ -79,7 +149,7 @@ const SignUp = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;
