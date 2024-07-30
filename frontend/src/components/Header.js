@@ -4,8 +4,12 @@ import { FcSearch } from "react-icons/fc";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaCartArrowDown } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const user = useSelector((state) => state?.user?.user);
+
+  console.log("user header", user);
   return (
     <header className="shadow-md bg-white">
       <div className="h-full container mx-auto flex items-center px-4 justify-between">
@@ -28,7 +32,15 @@ const Header = () => {
 
         <div className="flex items-center gap-7">
           <div className="text-5xl cursor-pointer">
-            <FaCircleUser />
+            {user?.profilePic ? (
+              <img
+                src={user?.profilePic}
+                alt="profilePic"
+                className="w-10 h-10 rounded-full"
+              />
+            ) : (
+              <FaCircleUser />
+            )}
           </div>
           <div className="text-4xl cursor-pointer relative">
             <span>
@@ -42,7 +54,7 @@ const Header = () => {
           <div>
             <Link
               to="/login"
-               className="px-4 py-2 rounded-full text-white bg-blue-600 hover:bg-blue-800"
+              className="px-4 py-2 rounded-full text-white bg-blue-600 hover:bg-blue-800"
             >
               Login
             </Link>
