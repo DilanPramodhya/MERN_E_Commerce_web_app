@@ -4,12 +4,33 @@ import { FcSearch } from "react-icons/fc";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaCartArrowDown } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import SummaryApi from "../common";
+import { toast } from "react-toastify";
+import { setUserDetails } from "../store/userSlice";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
+  const dispatch = useDispatch();
 
-  console.log("user header", user);
+  // console.log("user header", user);
+
+  const handleLogout = async () => {
+    const fetchData = await fetch(SummaryApi.logout_user.url, {
+      method: SummaryApi.logout_user.method,
+      credentials: "include",
+    });
+
+    const data = await fetchData.json();
+
+    if (data.success) {
+      toast.success(data.message);
+      dispatch(setUserDetails(null));
+    }
+    if (data.error) {
+      toast.error(data.message);
+    }
+  };
   return (
     <header className="shadow-md bg-white">
       <div className="h-full container mx-auto flex items-center px-4 justify-between">
@@ -35,7 +56,7 @@ const Header = () => {
             {user?.profilePic ? (
               <img
                 src={user?.profilePic}
-                alt="profilePic"
+                alt={user?.name}
                 className="w-10 h-10 rounded-full"
               />
             ) : (
@@ -52,12 +73,21 @@ const Header = () => {
           </div>
 
           <div>
-            <Link
-              to="/login"
-              className="px-4 py-2 rounded-full text-white bg-blue-600 hover:bg-blue-800"
-            >
-              Login
-            </Link>
+            {user?._id ? (
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-full text-white bg-blue-600 hover:bg-blue-800"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="px-4 py-2 rounded-full text-white bg-blue-600 hover:bg-blue-800"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
